@@ -61,3 +61,5 @@ _testmain.go
 
 # MacOS specific files
 .DS_Store
+tmp
+tmp/
