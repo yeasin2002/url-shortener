@@ -25,8 +25,8 @@ help:
 
 ## Run the application
 run:
-	# go run main.go
-	air
+	 go run main.go
+	
 
 
 ## Build the binary
