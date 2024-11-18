@@ -3,21 +3,17 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/yeasin2002/url-shortener/routers"
 )
 
 func main() {
-	// Define a handler function
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello, World!")
-	})
 
-	// Define the server configuration
-	server := &http.Server{
-		Addr: ":8080", // Port to listen on
-	}
+	http.HandleFunc("/", routers.GetUrl)
+	http.HandleFunc("/redirect", routers.RedirectToOriginalUrl)
 
-	fmt.Println("Starting server on :8080")
-	// Start the server
+	server := &http.Server{Addr: ":8080"}
+	fmt.Println("server Started  on :8080")
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("Server error:", err)
 	}
