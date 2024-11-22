@@ -1,40 +1,32 @@
 package routers
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"net/http"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/yeasin2002/url-shortener/utils"
 )
 
-// type UserUrl struct {
-// 	url string `json:"url"`
-// }
+type UserUrl struct {
+	URL string `json:"url"`
+}
 
-func GetUrl(w http.ResponseWriter, r *http.Request) {
-	payload := map[string]string{
-		"name":  "John Doe",
-		"email": "john.doe@example.com",
+func GetUrl(c *fiber.Ctx) error {
+	db := utils.ConnectDB("./database.db")
+	defer db.Close()
+	body := new(UserUrl)
+
+	if err := c.BodyParser(body); err != nil {
+		fmt.Printf("Error : %v", err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid JSON")
 	}
 
-	// Encode the payload to JSON
-	jsonData, err := json.Marshal(payload)
-	if err != nil {
-		fmt.Println("Error encoding JSON:", err)
-		return
-	}
-
-	resp, err := http.Post("http://example.com/api", "application/json", bytes.NewBuffer(jsonData))
-	if err != nil {
-		fmt.Println("Error making request:", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	fmt.Println("Response status:", resp.Status)
+	return c.JSON(map[string]string{
+		"URL": body.URL,
+	})
 
 }
 
-func RedirectToOriginalUrl(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "redirect!")
+func RedirectToOriginalUrl(c *fiber.Ctx) error {
+	return c.SendString("Hello, World!")
 }
